@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Copy-post. Синхронизируем все!{% endblock %}
+{% block title2 %}Мои синхронизации{% endblock %}
+
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li class="current-tab"><a href="{% url my.views.index %}">Личный кабинет</a></li>
+{% endblock %}
+
+{% block content %}
+    {% for sync in syncs %}
+
+        <h2 class="label label-green">{{ sync.title }}</h2>
+        <p>Источник: {{ sync.source.sn_type }}</p>
+        <h4 class="label label-orange">Последние посты</h4>
+        <ul class="nice-list">
+            {% for post in sync.posts %}
+                <li>
+                    <div class="left">{{ post.message }}</div>
+                    <div class="right">{{ post.posted|date:"Y-m-d H:i" }}</div>
+                    <div class="clearer">&nbsp;</div>
+                </li>
+            {% endfor %}
+        </ul>
+        <p>
+            <input type="button" class="button"
+                   onclick="document.location.href='{% url my.views.sync syncid=sync.id %}'"
+                   value="Редактировать синхронизацию">&nbsp;&nbsp;
+            <input type="button" class="button"
+                   onclick="document.location.href='{% url my.views.delsync syncid=sync.id %}'"
+                   value="Удалить синхронизацию">
+
+        </p>
+        {% if not forloop.last %}
+            <div class="archive-separator"></div>{% endif %}
+
+    {% endfor %}
+    <div class="form-row form-row-submit">
+        <input type="button" class="button" value="Добавить синхронизацию"
+               onclick="document.location.href='{% url my.views.new %}'"/>
+    </div>
+{% endblock %}

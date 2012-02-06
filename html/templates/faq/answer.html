@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Статьи {{ answer.question }} {% endblock %}
+{% block title2 %}Статьи {{ answer.question }} {% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li class="current-tab"><a href="{% url faq.views.index %}">Статьи</a></li>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <h2 class="label label-green"><a href="{% url faq.views.index %}">Вопрос-ответ</a> / <a
+                href="{% url faq.views.category id=category.id %}">{{ category.name }}</a></h2>
+    <br>
+
+        <h3>{{ answer.question }}</h3>
+        <p>{% autoescape off %}{{ answer.answer }}{% endautoescape %}<br><br>
+            <small>{{ answer.post_date }}</small></p>
+        <br>
+
+    </div>
+{% endblock %}

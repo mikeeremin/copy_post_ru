@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% block title %} new - copy-post {% endblock %}
+{% block title2 %} Синхронизация: {{ sync.title }} {% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li class="current-tab"><a href="{% url my.views.index %}">Личный кабинет</a></li>
+{% endblock %}
+{% block content %}
+    <h2 class="label label-green">Источник: {{ sync.source.sn_type }}</h2>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-row comment-input-name">
+            <div class="form-property required"><label for="synctitle">Название</label></div>
+            <div class="form-value"><input type="text" id="synctitle" class="text" name="synctitle"
+                                           value="{{ sync.title }}"></div>
+            <div class="clearer">&nbsp;</div>
+
+            {% if sync.source.sn_type.code == 'vk' %}
+
+                <div class="form-property required"><label for="sync_target_id_{{ sync.source.id }}">Группа</label>
+                </div>
+                <div class="form-value"><select name="sync_target_id_{{ sync.source.id }}">
+                    <option value="0">my wall</option>
+                    {% for group in sync.source.sources %}
+                        <option value="{{ group.id }}"
+                                {% if sync.source.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
+                    {% endfor %}
+                </select></div>
+                <div class="clearer">&nbsp;</div>
+            {% endif %}
+
+            {% if sync.source.sn_type.code == 'fb' %}
+                <div class="form-property required"><label for="userid_{{  sync.source.id }}">Группа</label></div>
+                <div class="form-value"><select name="userid_{{  sync.source.id }}">
+                    <option value="0">my wall</option>
+                    {% for group in sync.source.sources %}
+                        <option value="{{ group.id }}"
+                                {% if sync.source.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
+                    {% endfor %}
+                </select></div>
+                <div class="clearer">&nbsp;</div>
+            {% endif %}
+
+        </div>
+
+        <div class="archive-separator"></div>
+
+        <h2 class="label label-green">Цели: </h2>
+
+        {% for dest in sync.destination.all %}
+            <div class="section-title2"> {{ dest.sn_type }} </div>
+
+            {% if dest.sn_type.code == 'vk' %}
+                {% for error in errors %}
+                    {% if error.dest_id == dest.id %}
+                        <div class="error">{{ error.message }}</div>
+                    {% endif %}
+                {% endfor %}
+                <select name="userid_{{ dest.id }}">
+                    <option value="0">my wall</option>
+                    {% for group in destinations_vk %}
+                        <option value="{{ group.id }}"
+                                {% if dest.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+            {% if dest.sn_type.code == 'fb' %}
+                {% for error in errors %}
+                    {% if error.dest_id == dest.id %}
+                        <div class="error">{{ error.message }}</div>
+                    {% endif %}
+                {% endfor %}
+                <select name="userid_{{ dest.id }}">
+                    <option value="0">my wall</option>
+                    {% for group in destinations_fb %}
+                        <option value="{{ group.id }}"
+                                {% if dest.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
+                    {% endfor %}
+                </select>
+            {% endif %}
+
+        {% endfor %}
+
+        <div class="archive-separator"></div>
+
+        <h2 class="label label-green">Добавить цель: </h2>
+
+        <select id="destination" name="destination"
+                onchange="location.href='{% url my.views.sync syncid=sync.id %}?destination='+$('select#destination').val();" {% if destination %}
+                disabled {% endif %} >
+            <option value="0">--select--</option>
+            {% for sntype in sn_types %}
+                {% if sntype.code != sync.source.sn_type.code %}
+                    <option value="{{ sntype.code }}"
+                            {% if destination == sntype.code %}selected{% endif %}>{{ sntype.title }}</option>
+                {% endif %}
+            {% endfor %}
+        </select><br>
+
+        {% if destination %}
+            {% for field in fields %}
+
+                {% if field.type == 'text' %}
+                    <div class="form-property required"><label for="{{ field.name }}">{{ field.label }}</label></div>
+                    <div class="form-value"><input class="text" type="text" size="{{ field.size }}"
+                                                   name="{{ field.name }}"
+                                                   id="{{ field.name }}"></div>
+                    <div class="clearer">&nbsp;</div>
+                {% endif %}
+
+                {% if field.type == 'password' %}
+                    <div class="form-property required"><label for="{{ field.name }}">{{ field.label }}</label></div>
+                    <div class="form-value"><input class="text" type="password" size="{{ field.size }}"
+                                                   name="{{ field.name }}"
+                                                   id="{{ field.name }}"></div>
+                    <div class="clearer">&nbsp;</div>
+                {% endif %}
+
+
+                {% if field.type == 'button' %}
+                    <input class="button" type="button" size="{{ field.size }}" name="{{ field.name }}"
+                           value="{{ field.value }}"
+                           onclick="{{ field.onclick|safe }}">
+                    <br>
+                {% endif %}
+
+                {% if field.type == 'alertdiv' %}
+                    <div class="alertdiv" name="{{ field.name }}" id="{{ field.name }}"></div>
+                    <br>
+                {% endif %}
+
+                {% if field.type == 'select' %}
+                    <label>{{ field.label }}</label>
+                    <select name="{{ field.name }}" id="{{ field.name }}">
+                        {% for opt in field.values %}
+                            <option value="{{ opt.value }}">{{ opt.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                {% endif %}
+
+                {% if field.type == 'submit' %}
+                    <input class="button" type="submit" size="{{ field.size }}" name="{{ field.name }}"
+                           value="{{ field.value }}">
+                    <br>
+                {% endif %}
+
+
+                {% if field.type == 'message' %}
+                    <div class="notice" name="{{ field.name }}" id="{{ field.name }}">{{ field.message|safe }}</div>
+                {% endif %}
+
+
+            {% endfor %}
+        {% endif %}
+        <div class="form-row form-row-submit">
+            <input type="submit" class="button" value="Сохранить все"/>
+        </div>
+    </form>
+{% endblock %}

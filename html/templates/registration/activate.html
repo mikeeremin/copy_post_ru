@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Main{% endblock %}
+
+{% block mymenu %}{% endblock %}
+
+{% block content %}
+<h1>Активация</h1>
+Привет, {{ user.username }}!<br/>
+Ваша учетная запись активирована. <a href="{% url auth_login %}">Заходите</a> на сайт.
+<br/><br/>
+{% endblock %}
+

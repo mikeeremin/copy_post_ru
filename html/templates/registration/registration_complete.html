@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Main{% endblock %}
+
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+{% endblock %}
+
+{% block content %}
+
+    <h1>Регистрация завершена</h1>
+    <p>Спасибо за уделённое время!</p>
+    <p>На ваш e-mail отправлен
+        код подтверждения. Необходимо подтвердить регистрацию,
+        просто кликнув по указанной ссылке.</p>
+
+{% endblock %}

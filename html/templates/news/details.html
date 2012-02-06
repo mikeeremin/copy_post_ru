@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Новости проекта{% endblock %}
+{% block title2 %}{{ new.title }}{% endblock %}
+{% block menu %}
+    <li class="current-tab"><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li><a href="{% url faq.views.index %}">Статьи</a></li>
+{% endblock %}
+{% block content %}
+
+    {% autoescape off %} {{ new.text }} {% endautoescape %}
+    <br>
+    <a href="{% url news.views.index %}">Все новости</a>
+{% endblock %}

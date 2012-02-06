@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Мой профиль{% endblock %}
+{% block title2 %}Мой профиль{% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li class="current-tab"><a href="{% url my.views.index %}">Личный кабинет</a></li>
+{% endblock %}
+{% block content %}
+{{ url }}
+{% endblock %}

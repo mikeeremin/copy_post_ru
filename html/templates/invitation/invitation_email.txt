@@ -1,0 +1,5 @@
+Кто-то пригласил вас на сайт seopass.ru
+Вы можете зарегистрироваться по адресу: 
+
+http://{{ site }}/accounts/register/?invitation_key={{ invitation_key }}
+

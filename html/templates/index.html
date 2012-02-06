@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Copy-post. Синхронизируем все!{% endblock %}
+{% block title2 %}Copy-post. Синхронизируем все!{% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li><a href="{% url faq.views.index %}">Статьи</a></li>
+{% endblock %}
+{% block content %}
+    <p class="post">
+
+        Данный сайт поможет вам синхронизировать записи/статусы из:
+    <ul>
+        <li>RSS поток (Atom)</li>
+        <li>Вконтакте</li>
+        <li>Livejournal</li>
+        <li>Facebook</li>
+        <li>Twitter</li>
+    </ul>
+    в:
+    <ul>
+        <li>Вконтакте</li>
+        <li>Livejournal</li>
+        <li>Facebook</li>
+        <li>Twitter</li>
+    </ul>
+    Скоро будут доступны: Foursqare, Одноклассники, Google+
+    </p>
+{% endblock %}

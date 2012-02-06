@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}copypost{% endblock %}
+{% block title2 %}О нас{% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li class="current-tab"><a href="{% url views.about %}">О сайте</a></li>
+{% endblock %}
+{% block content %}
+   <p class="post">
+
+   Тут всякий блаблаблаб
+   </p>
+{% endblock %}

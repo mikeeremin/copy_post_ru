@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Выслать приглашение другу</h1>
+<form method = "post" action="">
+	{% csrf_token %}
+{{form}}
+<br />
+<input type="submit" value="Лови, друг!" class="button">
+<br /><br />
+
+</form>{% endblock %}
+
+

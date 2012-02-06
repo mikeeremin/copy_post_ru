@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Вопрос-ответ{% endblock %}
+{% block title2 %}Вопрос-ответ {% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li class="current-tab"><a href="{% url faq.views.index %}">Статьи</a></li>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        {% for cat in cats %}
+            <h2 class="label label-green"><a href="{% url faq.views.category id=cat.id%}">{{ cat.name }}</a></h2>
+            <ul class="nice-list">
+                {% for answer in cat.answers %}
+                    <li><a href="{% url faq.views.answer category=cat.id id=answer.id %}">{{ answer.question }}</a></li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    </div>
+{% endblock %}
+

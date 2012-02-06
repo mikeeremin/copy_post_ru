@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Новости{% endblock %}
+{% block title2 %}Новости{% endblock %}
+{% block menu %}
+    <li class="current-tab"><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li><a href="{% url faq.views.index %}">Статьи</a></li>
+{% endblock %}
+
+{% block content %}
+    {% for new in news %}
+        <h2 class="label label-green"><a href="{% url news.views.details new_id=new.id %}">{{ new.title }}</a></h2>
+        <p>{{ new.announce }}</p>
+        <p><a href="{% url news.views.details new_id=new.id %}" class="more">Далее &raquo;</a></p>
+    {% endfor %}
+
+    {% if news.count == 0 %}
+        <p>Новостей нет. Все плохо.</p>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <meta name="author" content=""/>
+    <link rel="stylesheet" type="text/css" href="/media/css/style.css" media="screen"/>
+    <script type="text/javascript" src="/media/js/jquery.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/media/js/j.js" charset="utf-8"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+
+<div id="site-wrapper">
+
+<div id="header">
+
+    <div id="top">
+
+        <div class="left" id="logo">
+            <a href="{% url views.index %}"><img src="/media/img/logo.png"></a>
+        </div>
+
+        <div class="left navigation" id="main-nav">
+
+            <ul class="tabbed">
+                {% block menu %}{% endblock %}
+            </ul>
+
+            <div class="clearer">&nbsp;</div>
+
+        </div>
+
+        <div class="clearer">&nbsp;</div>
+
+    </div>
+
+
+</div>
+
+
+
+<div class="main" id="main-two-columns">
+
+    <div class="left" id="main-content">
+
+        <div class="section">
+
+            <div class="section-title">{% block title2 %}{% endblock %}</div>
+
+            <div class="section-content">
+                {% block content %}{% endblock %}
+
+
+                <div class="content-separator"></div>
+
+                <div class="col3 left">
+                    <div class="column-content">
+
+                        <div class="post">
+
+                            <h3>
+                                <a href="{% url faq.views.answer category=faqs.0.category.id id=faqs.0.id %}">{{ faqs.0.question }}</a>
+                            </h3>
+
+                            <p>{{ faqs.0.answer_short }}</p>
+                            <a href="{% url faq.views.answer category=faqs.0.category.id id=faqs.0.id %}" class="more">Далее
+                                &#187;</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col3 col3-mid left">
+                    <div class="column-content">
+
+                        <div class="post">
+                            <h3>
+                                <a href="{% url faq.views.answer category=faqs.1.category.id id=faqs.1.id %}">{{ faqs.1.question }}</a>
+                            </h3>
+
+                            <p>{{ faqs.1.answer_short }}</p>
+                            <a href="{% url faq.views.answer category=faqs.1.category.id id=faqs.1.id %}#" class="more">Далее
+                                &#187;</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col3 right">
+                    <div class="column-content">
+
+                        <div class="post">
+                            <h3>
+                                <a href="{% url faq.views.answer category=faqs.2.category.id id=faqs.2.id %}">{{ faqs.2.question }}</a>
+                            </h3>
+
+                            <p>{{ faqs.2.answer_short }}</p>
+                            <a href="{% url faq.views.answer category=faqs.2.category.id id=faqs.2.id %}" class="more">Далее
+                                &#187;</a>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="clearer">&nbsp;</div>
+
+            </div>
+
+        </div>
+
+        <div class="clearer">&nbsp;</div>
+
+    </div>
+
+    <div class="right sidebar" id="sidebar">
+
+        <div class="section">
+
+            <div class="section-title">Личный кабинет</div>
+
+            <div class="section-content">
+                {% if user.is_authenticated %}
+                    <ul class="nice-list">
+                        <li>
+                            <div class="left"><a href="{% url my.views.index %}">мои синхронизации</a></div>
+                            <div class="clearer">&nbsp;</div>
+                        </li>
+                        <li>
+                            <div class="left"><a href="{% url my.views.profile %}">мои профиль</a></div>
+                            <div class="clearer">&nbsp;</div>
+                        </li>
+                        <li>
+                            <div class="left"><a href="{% url auth_logout %}">выйти</a></div>
+                        </li>
+                    </ul>
+
+                {% else %}
+                    <form action="{% url auth_login %}?next={{request.GET.next}}" class="login" method="post">
+                        {% csrf_token %}
+                        <div class="form-row comment-input-name">
+                            <div class="form-property required"><label for="username">Логин</label></div>
+                            <div class="form-value"><input name="username" id="username" value="" type="text" size="24"
+                                                           class="text"/></div>
+                            <div class="clearer">&nbsp;</div>
+                        </div>
+
+                        <div class="form-row comment-input-name">
+                            <div class="form-property required"><label for="password">Пароль</label></div>
+                            <div class="form-value"><input name="password" id="password" value="" type="password"
+                                                           size="24"
+                                                           class="text"/></div>
+                            <div class="clearer">&nbsp;</div>
+                        </div>
+
+                        <div class="form-row form-row-submit">
+                            <input type="submit" class="button" value="Войти"/>
+                        </div>
+                    </form>
+
+                    <script type="text/javascript">
+                        document.getElementById('username').focus()
+                    </script>
+
+                    <br/>
+                    <ul>
+                        <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
+                        <li><a href="{% url registration_register %}">Регистрация</a></li>
+                    </ul>
+                {% endif %}
+            </div>
+            <br>
+
+            <div class="section-title">Поиск по сайту</div>
+
+            <div class="section-content">
+                <form method="post" action="">
+                    <input type="text" class="text" size="28"/> &nbsp; <input type="submit" class="button"
+                                                                              value="Submit"/>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="section">
+
+            <div class="section-title">Последние новости</div>
+
+            <div class="section-content">
+
+                <ul class="nice-list">
+                    {% for new in news %}
+                        <li>
+                            <div class="left"><a href="{% url news.views.details new_id=new.id %}">{{ new.title }}</a>
+                            </div>
+                            <div class="right">{{ new.pdate|date:"Y-m-d" }}</div>
+                            <div class="clearer">&nbsp;</div>
+                        </li>
+                    {% endfor %}
+                    <li><a href="{% url news.views.index %}" class="more">Все новости &#187;</a></li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="clearer">&nbsp;</div>
+
+</div>
+
+<div id="footer">
+
+    <div class="left" id="footer-left">
+
+        <img src="/media/img/logo-small.gif" alt="" class="left"/>
+
+        <p>&copy; 2011 copy-post.ru</p>
+
+        <p class="quiet"><a href="http://mikehosts.com/">mikehosts.com</a>
+        </p>
+
+        <div class="clearer">&nbsp;</div>
+
+    </div>
+
+    <div class="right" id="footer-right">
+
+        <p class="large"><a href="#">Наш жж</a> <span class="text-separator">|</span> <a href="{% url news.views.index %}">Новости</a> <span
+                class="text-separator">|</span> <a href="{% url views.about %}">О нас</a> <span class="text-separator">|</span> <a href="#">Мы
+            Вконтакте</a>
+            <span class="text-separator">|</span> <strong><a href="#">Мы в facebook</a></strong></p>
+
+    </div>
+
+    <div class="clearer">&nbsp;</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

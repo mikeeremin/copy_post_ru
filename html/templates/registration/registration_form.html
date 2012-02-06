@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Register {% endblock %}
+{% block title2 %}Регистрация {% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+{% endblock %}
+{% block content %}
+
+
+    <p>
+        На сайт пускают только зарегистрированных пользователей.
+    </p>
+    <form method="post" action="" class="commentform">
+        <fieldset>
+            {% csrf_token %}
+            <div class="form-row comment-input-name">
+                <div class="form-property required"><label for="id_username">Логин</label></div>
+                <div class="form-value"> {{ form.username }}</div>
+                {% if form.username.errors %}
+                    <div class="error">{{ form.username.errors }}</div>
+                {% endif %}
+                <div class="clearer">&nbsp;</div>
+            </div>
+
+            <div class="form-row comment-input-name">
+                <div class="form-property required"><label for="id_email">Почта?</label></div>
+                <div class="form-value">{{ form.email }}</div>
+                {% if form.email.errors %}
+                    <div class="error">{{ form.email.errors }}</div>
+                {% endif %}
+                <div class="clearer">&nbsp;</div>
+            </div>
+
+            <div class="form-row comment-input-name">
+                <div class="form-property required"><label for="id_password1">Пароль</label></div>
+                <div class="form-value">{{ form.password1 }}</div>
+                {% if form.password1.errors %}
+                    <div class="error">{{ form.password1.errors }}</div>
+                {% endif %}
+                <div class="clearer">&nbsp;</div>
+            </div>
+
+            <div class="form-row comment-input-name">
+                <div class="form-property required"><label for="id_password2">Повтор пароля</label></div>
+                <div class="form-value">{{ form.password2 }}</div>
+                {% if form.password2.errors %}
+                    <div class="error">{{ form.password2.errors }}</div>
+                {% endif %}
+                <div class="clearer">&nbsp;</div>
+            </div>
+
+            <div class="form-row form-row-submit">
+                <input type="submit" class="button" value="Регистрация"/>
+            </div>
+
+        </fieldset>
+    </form>
+    <br/>
+
+    <p>
+
+    </p>
+
+{% endblock %}

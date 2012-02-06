@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %} new - copy-post {% endblock %}
+{% block title2 %}Новая синхронизация{% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+    <li class="current-tab"><a href="{% url my.views.index %}">Личный кабинет</a></li>
+{% endblock %}
+{% block content %}
+
+
+    <h2 class="label label-green">Источник:</h2>
+    <select id="source" name="source"
+            onchange="location.href='{% url my.views.new %}?src='+$('select#source').val();" {% if source %}
+            disabled {% endif %} >
+        <option value="0">--select--</option>
+        {% for sntype in sn_types %}
+            <option value="{{ sntype.code }}"
+                    {% if source == sntype.code %}selected{% endif %}>{{ sntype.title }}</option>
+        {% endfor %}
+    </select>
+    <div class="space">&nbsp;</div>
+    {% if source %}
+        <h2 class="label label-green">Параметры источника:</h2>
+        <form action="" method="post">
+            {% csrf_token %}
+            {% for field in fields %}
+
+                {% if field.type == 'text' %}
+                    <div class="form-property required"><label for="{{ field.name }}">{{ field.label }}</label></div>
+                    <div class="form-value"><input class="text" type="text" size="{{ field.size }}"
+                                                   name="{{ field.name }}"
+                                                   id="{{ field.name }}"></div>
+                    <div class="clearer">&nbsp;</div>
+                {% endif %}
+
+                {% if field.type == 'password' %}
+                    <div class="form-property required"><label for="{{ field.name }}">{{ field.label }}</label></div>
+                    <div class="form-value"><input class="text" type="password" size="{{ field.size }}"
+                                                   name="{{ field.name }}"
+                                                   id="{{ field.name }}"></div>
+                    <div class="clearer">&nbsp;</div>
+                {% endif %}
+
+                {% if field.type == 'button' %}
+                    <input class="button" type="button" size="{{ field.size }}" name="{{ field.name }}"
+                           value="{{ field.value }}"
+                           onclick="{{ field.onclick|safe }}">
+                    <br>
+                {% endif %}
+
+                {% if field.type == 'alertdiv' %}
+                    <div class="alertdiv" name="{{ field.name }}" id="{{ field.name }}"></div>
+                    <br>
+                {% endif %}
+
+                {% if field.type == 'message' %}
+                    <div class="notice" name="{{ field.name }}" id="{{ field.name }}">{{ field.message|safe }}</div>
+                {% endif %}
+
+                {% if field.type == 'error' %}
+                    <div class="error" name="{{ field.name }}" id="{{ field.name }}">{{ field.message|safe }}</div>
+                {% endif %}
+
+                {% if field.type == 'select' %}
+                    <label>{{ field.label }}</label>
+                    <select name="{{ field.name }}" id="{{ field.name }}">
+                        {% for opt in field.values %}
+                            <option value="{{ opt.value }}">{{ opt.name }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                {% endif %}
+
+                {% if field.type == 'submit' %}
+                    <input type="submit" class="button" size="{{ field.size }}" name="{{ field.name }}"
+                           value="{{ field.value }}">
+                    <br>
+                {% endif %}
+
+
+            {% endfor %}
+        </form>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Main{% endblock %}
+{% block title2 %}Авторизация{% endblock %}
+{% block menu %}
+    <li><a href="{% url news.views.index %}">Новости</a></li>
+    <li><a href="{% url views.about %}">О сайте</a></li>
+{% endblock %}
+{% block content %}
+
+
+    {% if user.is_authenticated %}
+        Что такое, {{ user.username }}? Вы же уже авторизорваны.
+        Впрочем, всегда можно <a href="{% url auth_logout %}">выйти</a>.<br/><br/>
+    {% else %}
+
+        {% if form.non_field_errors %}
+            {{ form.non_field_errors }}
+        {% endif %}
+
+
+
+        <form action="{% url auth_login %}?next={{request.GET.next}}" class="login" method="post">
+            {% csrf_token %}
+            <div class="form-row comment-input-name">
+                <div class="form-property required"><label for="username">Логин</label></div>
+                <div class="form-value"><input name="username" id="username" value="" type="text" size="24" class="text"/></div>
+                <div class="clearer">&nbsp;</div>
+            </div>
+
+            <div class="form-row comment-input-name">
+                <div class="form-property required"><label for="password">Пароль</label></div>
+                <div class="form-value"><input name="password" id="password" value="" type="password" size="24" class="text"/></div>
+                <div class="clearer">&nbsp;</div>
+            </div>
+
+             <div class="form-row form-row-submit">
+                <input type="submit" class="button" value="Войти"/>
+            </div>
+        </form>
+
+        <script type="text/javascript">
+            document.getElementById('username').focus()
+        </script>
+
+        <br/>
+        <ul>
+            <li><a href="{% url auth_password_reset %}">Забыли пароль?</a></li>
+            <li><a href="{% url registration_register %}">Регистрация</a></li>
+        </ul>
+    {% endif %}
+
+{% endblock %}
