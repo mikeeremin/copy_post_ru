@@ -22,7 +22,7 @@ parser.add_option("-d", "--debug", dest="debug", action="store_true")
 import feedparser, urllib, urllib2
 from urllib import quote
 
-MAX_POST_ITEMS = 5
+MAX_POST_ITEMS = 50
 
 if options.debug:
     DEBUG = True
