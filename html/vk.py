@@ -1,4 +1,5 @@
 import json, urllib2, urllib
+import pycurl, StringIO, os
 
 class VK(object):
     def __init__(self, settings):
@@ -35,24 +36,32 @@ class VK(object):
         return  posts
 
     def VKPost(self, ppobject, message, attachments=None):
+        exts = ('jpg', 'gif')
         url = "https://api.vkontakte.ru/method/wall.post"
         data = {'message': message.encode('utf-8'),
                 'access_token': ppobject.access_token,
                 'owner_id': -ppobject.userid,
                 'from_group': 1}
-
         if attachments:
-            data['attachments'] = ",".join(attachments)
+            data['attachments'] = []
+            for attach in attachments:
+                isphoto = False
+                for ext in exts:
+                    if attach.endswith(ext):
+                        params = self.VKGetWallUploadServer(ppobject.access_token, ppobject.userid)
+                        if 'response' in params and 'upload_url' in params['response']:
+                            photo = self.VKUploadWallPhoto(params['response']['upload_url'], attach,
+                                                           ppobject.access_token, ppobject.userid, ext)
+                            if photo:
+                                data['attachments'].append(photo)
+                                isphoto = True
+                if not isphoto:
+                    data['attachments'].append(attach)
+            data['attachments'] = ",".join(data['attachments'])
         resp = urllib2.urlopen(url, urllib.urlencode(data))
         print resp.read()
 
-    #        if urllib2.urlopen(url, urllib.urlencode(data)):
-    #            return True
-    #        else:
-    #            return False
-
     def VKGetGroups(self, access_token):
-        
         req = "https://api.vkontakte.ru/method/groups.get?access_token=%s&extended=1" % access_token
         resp = urllib2.urlopen(req)
         groups = json.loads(resp.read())
@@ -62,3 +71,47 @@ class VK(object):
         req = "https://api.vkontakte.ru/method/getUserSettings?access_token=%s&extended=1" % access_token
         resp = urllib2.urlopen(req)
         print resp.read()
+
+
+    def VKGetWallUploadServer(self, access_token, gid):
+        req = "https://api.vkontakte.ru/method/photos.getWallUploadServer"
+        data = {
+            'access_token': access_token,
+            'gid': -gid}
+        resp = urllib2.urlopen(req, urllib.urlencode(data))
+        params = json.loads(resp.read())
+        return  params
+
+    def VKUploadWallPhoto(self, url, photo, access_token, gid, ext):
+        img = urllib2.urlopen(photo)
+        try:
+            os.unlink('/tmp/photo.%s' % ext)
+        except Exception:
+            pass
+        local_file = open('/tmp/photo.%s' % ext, "w")
+        local_file.write(img.read())
+        buffer = StringIO.StringIO()
+        c = pycurl.Curl()
+        c.setopt(c.POST, 1)
+        c.setopt(c.URL, str(url))
+        c.setopt(c.HTTPPOST, [("photo", (c.FORM_FILE, '/tmp/photo.%s' % ext))])
+        c.setopt(c.WRITEFUNCTION, buffer.write)
+        
+        c.perform()
+        c.close()
+        params = json.loads(buffer.getvalue())
+        if 'server' in params:
+            req = "https://api.vkontakte.ru/method/photos.saveWallPhoto"
+            data = {
+                'access_token': access_token,
+                'server': params['server'],
+                'photo': params['photo'],
+                'hash': params['hash'],
+                'gid': -gid}
+            resp = urllib2.urlopen(req, urllib.urlencode(data))
+            params = json.loads(resp.read())
+            if 'response' in params and params['response'][0] and 'id' in params['response'][0]:
+                return params['response'][0]['id']
+            else:
+                return params
+        return False

@@ -22,7 +22,7 @@ parser.add_option("-d", "--debug", dest="debug", action="store_true")
 import feedparser, urllib, urllib2
 from urllib import quote
 
-MAX_POST_ITEMS = 50
+MAX_POST_ITEMS = 5
 
 if options.debug:
     DEBUG = True
@@ -41,6 +41,7 @@ except Sync.DoesNotExist:
 
 source = sync.source
 messages = []
+img_ext = ('jpg', 'gif')
 
 #Source - RSS
 if source.sn_type.code == 'rss':
@@ -72,6 +73,13 @@ if source.sn_type.code == 'rss':
                 pi.save()
                 source_message['text'] = item['title']
                 source_message['attachements'].append({"type": "url", "src": item['link']})
+                if 'summary' in item:
+                    for ext in img_ext:
+                        if item['summary'].find(ext)!=-1:
+                            match = re.findall(r"src=[\'\"](.*?)[\"\']", item['summary'])
+                            if match[0]:
+                                source_message['attachements'].append({"type": "img", "src": match[0]})
+
                 messages.append(source_message)
 
 # Source - vk
