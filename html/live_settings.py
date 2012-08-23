@@ -24,7 +24,7 @@ DATABASES = {
 
 TEMPLATE_DIRS = ('/var/www/html/dev.copy-post.ru/html/templates',)
 ADMIN_MEDIA_PREFIX = '/admin_media/'
-HTTP_HOST = "http://dev.copy-post.ru"
+HTTP_HOST = "http://copy-post.ru"
 SYNC_BIN = "/var/www/html/dev.copy-post.ru/html/sync.sh"
 
 fb_settings = {
@@ -32,6 +32,6 @@ fb_settings = {
     "client_secret": "70f871d1c3d498088350c7b38dbf8114",
     "redirect_uri": "%s" % HTTP_HOST,
     "permission": "publish_stream,offline_access,user_groups,friends_groups",
-    "post_from": "dev.copy-post.ru"
+    "post_from": "copy-post.ru"
 }
 
