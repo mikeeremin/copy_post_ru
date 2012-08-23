@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from decorators import render_to
-from my.models import PostPlace, Sync, SNType, PostItem
+from my.models import PostPlace, Sync, SNType, PostItem, UserProfile
 from settings import twitter_settings, HTTP_HOST, fb_settings, vk_settings, fs_settings
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 import feedparser
@@ -507,7 +507,7 @@ def delsync(request, syncid):
 @login_required()
 @render_to('my/profile.html')
 def profile(request):
-    url = request.user.get_profile()
+    url, created = UserProfile.objects.get_or_create(user = request.user)
     return {'user': request.user}
 
 
