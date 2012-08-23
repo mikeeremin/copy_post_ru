@@ -69,7 +69,11 @@ class FB(object):
             "from": self.settings["post_from"]
         }
         post_params.update(params)
-        return self.fb_graph.put_wall_post(message=message,attachment=post_params,profile_id=profile_id)
+        try:
+            ret = self.fb_graph.put_wall_post(message=message,attachment=post_params,profile_id=profile_id)
+        except Exception:
+            return True
+        return ret
 
     def getGroups(self):
         data = self.fb_graph.get_connections("me","groups")

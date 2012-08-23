@@ -36,7 +36,7 @@ class VK(object):
         return  posts
 
     def VKPost(self, ppobject, message, attachments=None):
-        exts = ('jpg', 'gif')
+        exts = ('jpg', 'gif', 'JPG', 'jpeg', 'JPEG', 'GIF', 'png', 'PNG')
         url = "https://api.vkontakte.ru/method/wall.post"
         data = {'message': message.encode('utf-8'),
                 'access_token': ppobject.access_token,
@@ -59,7 +59,7 @@ class VK(object):
                     data['attachments'].append(attach)
             data['attachments'] = ",".join(data['attachments'])
         resp = urllib2.urlopen(url, urllib.urlencode(data))
-        print resp.read()
+        return resp.read()
 
     def VKGetGroups(self, access_token):
         req = "https://api.vkontakte.ru/method/groups.get?access_token=%s&extended=1" % access_token
@@ -88,15 +88,18 @@ class VK(object):
             os.unlink('/tmp/photo.%s' % ext)
         except Exception:
             pass
-        local_file = open('/tmp/photo.%s' % ext, "w")
+        local_file = open('/tmp/photo.%s' % ext, "wb")
         local_file.write(img.read())
         buffer = StringIO.StringIO()
+        fields = [
+            ('photo', (pycurl.FORM_FILE, '/tmp/photo.%s' % ext)),
+        ]
         c = pycurl.Curl()
         c.setopt(c.POST, 1)
         c.setopt(c.URL, str(url))
-        c.setopt(c.HTTPPOST, [("photo", (c.FORM_FILE, '/tmp/photo.%s' % ext))])
+        c.setopt(c.HTTPPOST, fields)
         c.setopt(c.WRITEFUNCTION, buffer.write)
-        
+
         c.perform()
         c.close()
         params = json.loads(buffer.getvalue())
