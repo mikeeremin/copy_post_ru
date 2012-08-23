@@ -13,7 +13,7 @@ def news(request):
 
 def faq(request):
     from faq.models import FaqAnswers
-    return {'faqs' : FaqAnswers.objects.all().order_by('?')[:3]}
+    return {'faqs' : FaqAnswers.objects.all()[:3]}
 
 TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.auth.context_processors.auth",
