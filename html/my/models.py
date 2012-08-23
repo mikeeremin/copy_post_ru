@@ -21,7 +21,7 @@ class PostPlace(models.Model):
     oauth_token_secret = models.CharField(default='', max_length=1000)
     login = models.CharField(max_length=255, default='')
     password = models.CharField(max_length=255, default='')
-
+    enabled = models.BooleanField(default=True)
 
 class Sync(models.Model):
     title = models.CharField(max_length=255, null=False)
