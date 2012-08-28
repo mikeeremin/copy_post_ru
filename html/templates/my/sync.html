@@ -21,7 +21,7 @@
                 <div class="form-property required"><label for="sync_target_id_{{ sync.source.id }}">Группа</label>
                 </div>
                 <div class="form-value"><select name="sync_target_id_{{ sync.source.id }}">
-                    <option value="0">my wall</option>
+                    <option value="0">Моя стена</option>
                     {% for group in sync.source.sources %}
                         <option value="{{ group.id }}"
                                 {% if sync.source.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
@@ -33,7 +33,7 @@
             {% if sync.source.sn_type.code == 'fb' %}
                 <div class="form-property required"><label for="userid_{{  sync.source.id }}">Группа</label></div>
                 <div class="form-value"><select name="userid_{{  sync.source.id }}">
-                    <option value="0">my wall</option>
+                    <option value="0">Моя стена</option>
                     {% for group in sync.source.sources %}
                         <option value="{{ group.id }}"
                                 {% if sync.source.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
@@ -58,12 +58,13 @@
                     {% endif %}
                 {% endfor %}
                 <select name="userid_{{ dest.id }}">
-                    <option value="0">my wall</option>
+                    <option value="0">Моя стена</option>
                     {% for group in destinations_vk %}
                         <option value="{{ group.id }}"
                                 {% if dest.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
                     {% endfor %}
                 </select>
+                <hr style="border: 0; padding-bottom: 5px;">
             {% endif %}
 
             {% if dest.sn_type.code == 'fb' %}
@@ -73,13 +74,25 @@
                     {% endif %}
                 {% endfor %}
                 <select name="userid_{{ dest.id }}">
-                    <option value="0">my wall</option>
+                    <option value="0">Моя стена</option>
                     {% for group in destinations_fb %}
                         <option value="{{ group.id }}"
                                 {% if dest.userid == group.id %}selected {% endif %}>{{ group.name }}</option>
                     {% endfor %}
                 </select>
+                <hr style="border: 0; padding-bottom: 5px;">
             {% endif %}
+
+            {% if dest.sn_type.code == 'lj' %}
+                <span>Синхронизация установлена</span>
+                <hr style="border: 0; padding-bottom: 5px;">
+            {% endif %}
+
+            {% if dest.sn_type.code == 'twitter' %}
+                <span>Синхронизация установлена</span>
+                <hr style="border: 0; padding-bottom: 5px;">
+            {% endif %}
+
 
         {% endfor %}
 

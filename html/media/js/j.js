@@ -26,10 +26,11 @@ function feedtest() {
 }
 
 function vkontakteauth(backurl) {
-    var url = "http://api.vkontakte.ru/oauth/authorize?client_id=2663418&scope=wall,groups,offline&response_type=token";
+    var url = "http://api.vkontakte.ru/oauth/authorize?client_id=2663418&scope=wall,groups,offline&response_type=code&redirect_uri=" + backurl;
+    //var url = "http://api.vkontakte.ru/oauth/authorize?client_id=2663418&scope=wall,groups,offline&response_type=token";
         //"&redirect_uri=" + backurl
-    auth = window.open(url, "test");
-    //document.location.href = url;
+    //auth = window.open(url, "test");
+    document.location.href = url;
 }
 
 function foursquareauth(backurl) {

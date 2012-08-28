@@ -96,11 +96,11 @@ def new(request):
                 return HttpResponseRedirect(reverse('my.views.sync', args=[s.id]))
 
             fields = [
-                    {'name': 'message', 'type': 'message', 'message': vk_notice},
+                    #{'name': 'message', 'type': 'message', 'message': vk_notice},
                     {'name': 'vkauth', 'type': 'button', 'size': 5, 'value': 'Авторизация через сайт Vkontakte',
                      'onclick': 'vkontakteauth(\'%s%s?%s\');' % (HTTP_HOST, reverse('my.views.new'), 'src=vk')},
-                    {'name': 'token', 'type': 'text', 'size': 50, 'label': 'Token'},
-                    {'name': 'feedsave', 'type': 'submit', 'value': 'Далее'},
+                    #{'name': 'token', 'type': 'text', 'size': 50, 'label': 'Token'},
+                    #{'name': 'feedsave', 'type': 'submit', 'value': 'Далее'},
             ]
 
         # twitter

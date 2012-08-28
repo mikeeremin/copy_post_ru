@@ -9,6 +9,11 @@
 {% endblock %}
 
 {% block content %}
+    <div class="form-row form-row-submit">
+        <input type="button" class="button" value="Добавить синхронизацию"
+               onclick="document.location.href='{% url my.views.new %}'"/>
+    </div>
+
     {% for sync in syncs %}
 
         <h2 class="label label-green">{{ sync.title }}</h2>
@@ -28,7 +33,7 @@
                    onclick="document.location.href='{% url my.views.sync syncid=sync.id %}'"
                    value="Редактировать синхронизацию">&nbsp;&nbsp;
             <input type="button" class="button"
-                   onclick="document.location.href='{% url my.views.delsync syncid=sync.id %}'"
+                   onclick="if (confirm('Точно удалить?')) {document.location.href='{% url my.views.delsync syncid=sync.id %}' };"
                    value="Удалить синхронизацию">
 
         </p>
