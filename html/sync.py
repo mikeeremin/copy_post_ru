@@ -191,6 +191,7 @@ for item in messages:
                         print res
                 except Exception:
                     destination.enabled = False
+                    destination.save()
 
 
         if destination.sn_type.code == 'twitter':
