@@ -22,7 +22,7 @@
         <ul class="nice-list">
             {% for post in sync.posts %}
                 <li>
-                    <div class="left">{{ post.message }}</div>
+                    <div class="left">{% if post.title %}<b>{{ post.title }}</b><br>{% endif %}{{ post.message|truncatewords:20  }}</div>
                     <div class="right">{{ post.posted|date:"Y-m-d H:i" }}</div>
                     <div class="clearer">&nbsp;</div>
                 </li>
