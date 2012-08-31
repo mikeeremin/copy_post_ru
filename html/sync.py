@@ -24,7 +24,7 @@ parser.add_option("-d", "--debug", dest="debug", action="store_true")
 import feedparser, urllib, urllib2
 from urllib import quote
 
-MAX_POST_ITEMS = 14
+MAX_POST_ITEMS = 1
 
 if options.debug:
     DEBUG = True
@@ -178,6 +178,8 @@ for item in messages:
             message = ""
             if item['text']:
                 message = "%s" % (item['title']) #, html2safehtml(item['text'])
+                if item['text']:
+                    message+="   %s" % html2text(item['text'])
             if item['attachements']:
                 for attach in item['attachements']:
                     attachments.append(attach['src'])

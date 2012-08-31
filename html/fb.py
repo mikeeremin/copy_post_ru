@@ -43,10 +43,13 @@ class FB(object):
         #raise Exception, access_url
         data = cgi.parse_qs(urllib.urlopen(access_url).read())
         #raise Exception, data
-        if data:
-            self.settings["access_token"] = data["access_token"][0]
-            self.fb_graph = facebook.GraphAPI(self.settings["access_token"])
-            return True
+        try:
+            if data:
+                self.settings["access_token"] = data["access_token"][0]
+                self.fb_graph = facebook.GraphAPI(self.settings["access_token"])
+                return True
+        except Exception:
+            pass
         return False
 
     def sendRequest(self,api_path="",post_params={}):
