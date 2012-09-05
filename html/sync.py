@@ -24,7 +24,7 @@ parser.add_option("-d", "--debug", dest="debug", action="store_true")
 import feedparser, urllib, urllib2
 from urllib import quote
 
-MAX_POST_ITEMS = 1
+MAX_POST_ITEMS = 100
 
 if options.debug:
     DEBUG = True
@@ -50,7 +50,10 @@ img_ext = ('jpg', 'gif', 'JPG', 'jpeg', 'JPEG', 'GIF', 'png', 'PNG')
 if source.sn_type.code == 'rss':
     feed = feedparser.parse(source.url)
     if hasattr(feed, 'status') and feed.status == 200:
-        items = feed.items()[8][1]
+        if 'entries' in feed:
+            items = feed['entries']
+        if not items:
+            items = feed.items()[8][1]
         max_items = MAX_POST_ITEMS
         if len(items) < MAX_POST_ITEMS:
             max_items = len(items)

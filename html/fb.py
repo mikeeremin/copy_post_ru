@@ -79,8 +79,19 @@ class FB(object):
         return ret
 
     def getGroups(self):
-        data = self.fb_graph.get_connections("me","groups")
+        data = self.fb_graph.get_connections("me","groups   ")
         return data["data"]
+
+    def getPages(self):
+        pages = []
+        data = self.fb_graph.get_connections("me","accounts")
+        if 'data' in data:
+            for a in data['data']:
+
+                if 'perms' in a and 'CREATE_CONTENT' in a['perms']:
+                    pages.append(a)
+        return pages
+
 
     def getGroupFeed(self,group_id):
         return self.fb_graph.get_object("%s/feed" % group_id)["data"]

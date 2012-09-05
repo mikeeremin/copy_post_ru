@@ -251,6 +251,7 @@ def sync(request, syncid):
 
         fb.login()
         groups = fb.getGroups()
+
         sync.source.sources = []
         for group in groups:
             if 'administrator' in group:
@@ -277,7 +278,7 @@ def sync(request, syncid):
                 return HttpResponseRedirect(reverse('my.views.sync', args=[sync.id]))
             fields = [
 
-                    {'name': 'message', 'type': 'message', 'message': vk_notice},
+                    #{'name': 'message', 'type': 'message', 'message': vk_notice},
                     {'name': 'vkauth', 'type': 'button', 'size': 5, 'value': 'Авторизация через сайт Vkontakte',
                      'onclick': 'vkontakteauth(\'%s%s\');' % (HTTP_HOST, reverse('my.views.syncvk', args=[sync.id]))},
                     {'name': 'token', 'type': 'text', 'size': 50, 'label': 'Token'},
@@ -352,10 +353,16 @@ def sync(request, syncid):
                 fb = FB(fb_settings, code=dest.access_token)
                 fb.login()
                 groups = fb.getGroups()
+                pages = fb.getPages()
+
                 if groups:
                     for group in groups:
                         if 'administrator' in group:
-                            destinations_fb.append({'id': int(group['id']), 'name': group['name']})
+                            destinations_fb.append({'id': int(group['id']), 'name': 'Группа - ' + group['name']})
+
+                if pages:
+                    for page in pages:
+                        destinations_fb.append({'id': int(page['id']), 'name': 'Страница - ' + page['name']})
 
     return {'sync': sync, 'sn_types': sn_types, 'destination': destination, 'fields': fields,
             'destinations_vk': destinations_vk, 'destinations_fb': destinations_fb, 'errors': errors}
