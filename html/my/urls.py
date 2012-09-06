@@ -11,5 +11,6 @@ urlpatterns = patterns('my.views',
     (r'^sync/(?P<syncid>\d+)/twitter/$', 'synctwitter'),
     (r'^sync/(?P<syncid>\d+)/fb/$', 'syncfacebook'),
     (r'^sync/(?P<syncid>\d+)/fs/$', 'syncfoursqare'),
+    (r'^sync/(?P<syncid>\d+)/delete/(?P<ppid>\d+)/$', 'deldest'),
     (r'^profile/$', 'profile'),
                        )

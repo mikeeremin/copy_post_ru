@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from fb import FB
 from vk import VK
 from foursquare import FS
+from django.shortcuts import redirect
 
 vk_notice = """
 Поскольку сайт vkontakte временно или навечно поломал свой API, нужно немного поработать руками.<br>
@@ -118,7 +119,7 @@ def new(request):
             request.session['oauth_token_secret'] = register['data']['oauth_token_secret']
             request.session['oauth_token'] = register['data']['oauth_token']
             fields = [
-                    {'name': 'twauth', 'type': 'button', 'size': 5, 'value': 'Twitter auth',
+                    {'name': 'twauth', 'type': 'button', 'size': 5, 'value': 'Авторизоваться через Twitter',
                      'onclick': 'twitterauth(\'%s?src=twitter\', \'%s\');' % (
                          reverse('my.views.new'), register['url'])},
             ]
@@ -281,8 +282,8 @@ def sync(request, syncid):
                     #{'name': 'message', 'type': 'message', 'message': vk_notice},
                     {'name': 'vkauth', 'type': 'button', 'size': 5, 'value': 'Авторизация через сайт Vkontakte',
                      'onclick': 'vkontakteauth(\'%s%s\');' % (HTTP_HOST, reverse('my.views.syncvk', args=[sync.id]))},
-                    {'name': 'token', 'type': 'text', 'size': 50, 'label': 'Token'},
-                    {'name': 'feedsave', 'type': 'submit', 'value': 'Save feed'},
+                    #{'name': 'token', 'type': 'text', 'size': 50, 'label': 'Token'},
+                    #{'name': 'feedsave', 'type': 'submit', 'value': 'Save feed'},
             ]
 
         if destination == 'twitter':
@@ -292,7 +293,7 @@ def sync(request, syncid):
             request.session['oauth_token_secret'] = register['data']['oauth_token_secret']
             request.session['oauth_token'] = register['data']['oauth_token']
             fields = [
-                    {'name': 'twauth', 'type': 'button', 'size': 5, 'value': 'Twitter auth',
+                    {'name': 'twauth', 'type': 'button', 'size': 5, 'value': 'Авторизоваться через Twitter',
                      'onclick': 'twitterauth(\'%s\', \'%s\');' % (
                          reverse('my.views.synctwitter', args=[sync.id]), register['url'])},
             ]
@@ -326,6 +327,7 @@ def sync(request, syncid):
                     {'name': 'password', 'type': 'password', 'size': 50, 'label': 'Password'},
                     {'name': 'feedsave', 'type': 'submit', 'value': 'Продолжить'},
             ]
+
 
     if sync.destination.all():
         for dest in sync.destination.all():
@@ -517,4 +519,13 @@ def profile(request):
     url, created = UserProfile.objects.get_or_create(user = request.user)
     return {'user': request.user}
 
+@login_required()
+def deldest(request, syncid, ppid):
+    try:
+        pp = PostPlace.objects.get(pk=ppid)
+    except PostPlace.DoesNotExist:
+        raise Exception, "Something wrong..."
 
+    pp.delete()
+
+    return redirect(reverse("my.views.sync", args=[syncid]))

@@ -188,14 +188,14 @@ DEFAULT_FROM_EMAIL = 'noreply@seopass.ru'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-HTTP_HOST = "http://copy-post.ru"
+HTTP_HOST = "http://dev.copy-post.ru"
 
 fb_settings = {
     "client_id": "119375981504441",
     "client_secret": "70f871d1c3d498088350c7b38dbf8114",
     "redirect_uri": "%s" % HTTP_HOST,
     "permission": "publish_stream,offline_access,user_groups,friends_groups,manage_pages",
-    "post_from": "copy-post.ru"
+    "post_from": "dev.copy-post.ru"
 }
 
 vk_settings = {

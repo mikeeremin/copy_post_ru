@@ -1114,3 +1114,12 @@ img.alignright, img.right {
     height: 30px;
     display: none;
 }
+
+.sync_status {
+    padding-left: 5px;
+    vertical-align: baseline;
+}
+
+.status_right {
+    float: right;
+}

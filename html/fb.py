@@ -44,12 +44,11 @@ class FB(object):
         data = cgi.parse_qs(urllib.urlopen(access_url).read())
         #raise Exception, data
         try:
-            if data:
-                self.settings["access_token"] = data["access_token"][0]
-                self.fb_graph = facebook.GraphAPI(self.settings["access_token"])
-                return True
+            self.settings["access_token"] = data["access_token"][0]
+            self.fb_graph = facebook.GraphAPI(self.settings["access_token"])
+            return True
         except Exception:
-            pass
+            raise Exception, "Can't login to facebook"
         return False
 
     def sendRequest(self,api_path="",post_params={}):
@@ -79,7 +78,8 @@ class FB(object):
         return ret
 
     def getGroups(self):
-        data = self.fb_graph.get_connections("me","groups   ")
+
+        data = self.fb_graph.get_connections("me","groups")
         return data["data"]
 
     def getPages(self):

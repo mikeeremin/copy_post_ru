@@ -49,7 +49,17 @@
         <h2 class="label label-green">Цели: </h2>
 
         {% for dest in sync.destination.all %}
-            <div class="section-title2"> {{ dest.sn_type }} </div>
+            <div class="section-title2"> {{ dest.sn_type }}
+                {% if dest.enabled %}
+                    <img src="/media/img/ok.png" width="14" height="14" title="Цель доступна" class="sync_status">
+                {% else %}
+                    <img src="/media/img/error.png" width="14" height="14" title="Цель НЕ доступна!"
+                         class="sync_status">
+                {% endif %}
+                <div class="status_right">
+                    <a href="#" onclick="if (confirm('Удалить эту цель?')) document.location.href='{% url my.views.deldest syncid=sync.id ppid=dest.id %}';"><img src="/media/img/delete.png" title="Удалить цель"></a>
+                </div>
+            </div>
 
             {% if dest.sn_type.code == 'vk' %}
                 {% for error in errors %}
@@ -101,7 +111,8 @@
         <h2 class="label label-green">Добавить цель: </h2>
 
         <select id="destination" name="destination"
-                onchange="location.href='{% url my.views.sync syncid=sync.id %}?destination='+$('select#destination').val();" {% if destination %}
+                onchange="location.href='{% url my.views.sync syncid=sync.id %}?destination='+$('select#destination').val();"
+                {% if destination %}
                 disabled {% endif %} >
             <option value="0">--select--</option>
             {% for sntype in sn_types %}
@@ -114,7 +125,6 @@
 
         {% if destination %}
             {% for field in fields %}
-
                 {% if field.type == 'text' %}
                     <div class="form-property required"><label for="{{ field.name }}">{{ field.label }}</label></div>
                     <div class="form-value"><input class="text" type="text" size="{{ field.size }}"
@@ -164,8 +174,6 @@
                 {% if field.type == 'message' %}
                     <div class="notice" name="{{ field.name }}" id="{{ field.name }}">{{ field.message|safe }}</div>
                 {% endif %}
-
-
             {% endfor %}
         {% endif %}
         <div class="form-row form-row-submit">

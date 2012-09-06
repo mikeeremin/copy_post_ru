@@ -21,10 +21,10 @@ def details(request, new_id):
 
 
 class rss(Feed):
-    title = "Последние новости easy-dns.ru"
-    link = "http://easy-dns.ru/news/"
-    description = "Новости регистратора доменных имен easy-dns.ru"
-    author_link = "http://easy-dns.ru" 
+    title = "Copy-post. Синхронизируем все!"
+    link = "http://copy-post.ru/news/"
+    description = "Новости сервиса copy-post.ru"
+    author_link = "http://copy-post.ru"
     def items(self):
         return News.objects.all().order_by('-pdate')
     
@@ -35,4 +35,4 @@ class rss(Feed):
         return item.announce 
 
     def item_link(self, item):
-        return 'http://easy-dns.ru' + reverse('news.views.details', args=[item.id]) 
+        return 'http://copy-post.ru' + reverse('news.views.details', args=[item.id])
