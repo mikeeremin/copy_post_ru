@@ -250,13 +250,26 @@ def sync(request, syncid):
         fb_settings['redirect_uri'] = "%s%s?src=fb" % (HTTP_HOST, reverse('my.views.new'))
         fb = FB(fb_settings, code=sync.source.access_token)
 
-        fb.login()
-        groups = fb.getGroups()
-
         sync.source.sources = []
-        for group in groups:
-            if 'administrator' in group:
-                sync.source.sources.append({'id': int(group['id']), 'name': group['name']})
+
+        try:
+            fb.login()
+            groups = fb.getGroups()
+            pages = fb.getPages()
+        except Exception:
+            pass
+        if groups:
+            for group in groups:
+                if 'administrator' in group:
+                    sync.source.sources.append({'id': int(group['id']), 'name': 'Группа - ' + group['name']})
+
+        if pages:
+            for page in pages:
+                sync.source.sources.append({'id': int(page['id']), 'name': 'Страницы - ' + page['name']})
+
+#        for group in groups:
+#            if 'administrator' in group:
+#                sync.source.sources.append({'id': int(group['id']), 'name': group['name']})
 
     destination = None
     destinations_vk = []
@@ -279,11 +292,8 @@ def sync(request, syncid):
                 return HttpResponseRedirect(reverse('my.views.sync', args=[sync.id]))
             fields = [
 
-                    #{'name': 'message', 'type': 'message', 'message': vk_notice},
                     {'name': 'vkauth', 'type': 'button', 'size': 5, 'value': 'Авторизация через сайт Vkontakte',
                      'onclick': 'vkontakteauth(\'%s%s\');' % (HTTP_HOST, reverse('my.views.syncvk', args=[sync.id]))},
-                    #{'name': 'token', 'type': 'text', 'size': 50, 'label': 'Token'},
-                    #{'name': 'feedsave', 'type': 'submit', 'value': 'Save feed'},
             ]
 
         if destination == 'twitter':
@@ -351,12 +361,16 @@ def sync(request, syncid):
                             destinations_vk.append({'id': group['gid'], 'name': group['name']})
 
             if dest.sn_type.code == 'fb':
+                groups = None
+                pages = None
                 fb_settings['redirect_uri'] = "%s%s" % (HTTP_HOST, reverse('my.views.syncfacebook', args=[sync.id]))
                 fb = FB(fb_settings, code=dest.access_token)
-                fb.login()
-                groups = fb.getGroups()
-                pages = fb.getPages()
-
+                try:
+                    fb.login()
+                    groups = fb.getGroups()
+                    pages = fb.getPages()
+                except Exception:
+                    pass
                 if groups:
                     for group in groups:
                         if 'administrator' in group:
@@ -516,7 +530,7 @@ def delsync(request, syncid):
 @login_required()
 @render_to('my/profile.html')
 def profile(request):
-    url, created = UserProfile.objects.get_or_create(user = request.user)
+    #url, created = UserProfile.objects.get_or_create(user = request.user)
     return {'user': request.user}
 
 @login_required()

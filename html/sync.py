@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#export PYTHONPATH=$PYTHONPATH:c:/work/copypost
 
 import os, re, time, datetime
 from optparse import OptionParser
@@ -13,6 +12,21 @@ from ljapi import LJPost
 import random
 from stripogram import html2text, html2safehtml
 import json
+from HTMLParser import HTMLParser
+
+class MLStripper(HTMLParser):
+    def __init__(self):
+        self.reset()
+        self.fed = []
+    def handle_data(self, d):
+        self.fed.append(d)
+    def get_data(self):
+        return ''.join(self.fed)
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'live_settings'
 from live_settings import *
@@ -179,10 +193,14 @@ for item in messages:
             vk = VK(vk_settings)
             attachments = []
             message = ""
-            if item['text']:
+            if 'title' in item:
                 message = "%s" % (item['title']) #, html2safehtml(item['text'])
-                if item['text']:
+            if 'text' in item:
+                try:
                     message+="   %s" % html2text(item['text'])
+                except Exception:
+                    message+="   %s" % strip_tags(item['text'])
+
             if item['attachements']:
                 for attach in item['attachements']:
                     attachments.append(attach['src'])

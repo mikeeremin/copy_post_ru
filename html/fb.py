@@ -48,7 +48,7 @@ class FB(object):
             self.fb_graph = facebook.GraphAPI(self.settings["access_token"])
             return True
         except Exception:
-            raise Exception, "Can't login to facebook"
+            return False
         return False
 
     def sendRequest(self,api_path="",post_params={}):
